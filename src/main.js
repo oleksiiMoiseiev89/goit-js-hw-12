@@ -93,13 +93,17 @@ function getGalleryItems() {
         console.error('Unknown error:', error.message);
       }
     })
-    .finally(() => {
-      const cardSizes = list.lastChild.getBoundingClientRect();
-      window.scrollBy({
-        top: cardSizes.height * 2,
-        behavior: 'smooth',
-      });
-      loader.style.display = 'none';
-    });
+    loader.style.display = 'none';
   form.reset();
 }
+function scrollToNewImages() {
+  const galleryItems = document.querySelectorAll('.gallery a');
+  if (galleryItems.length > 0) {
+    const { height: cardHeight } = galleryItems[0].getBoundingClientRect();
+    window.scrollBy({
+      top: cardHeight * 2,
+      behavior: 'smooth',
+    });
+  }
+}
+    
