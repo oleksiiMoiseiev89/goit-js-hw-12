@@ -2,10 +2,11 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
+import err from './img/err.png';
 import httpRequest from './js/pixabay-api.js';
 import createMarkup from './js/render-functions.js';
 
-const key = '46849088-f4247fdb1b297b5b75b98a0ef';
+const key = '45158363-d126d9ec5bd50365e414d8df4';
 const form = document.querySelector('.form');
 const list = document.querySelector('.list');
 const button = document.querySelector('.loadMoreBtn');
@@ -23,7 +24,7 @@ function searchHandler(evt) {
   list.innerHTML = '';
   text = evt.target.elements.input.value.trim();
   evt.preventDefault();
-  if (text != 0) {
+  if (text !== 0) {
     loader.style.display = 'block';
     pageNumber = 1;
     getGalleryItems();
@@ -42,8 +43,7 @@ function getGalleryItems() {
         list.insertAdjacentHTML('beforeend', createMarkup(photos));
         if (response.totalHits > perPage * pageNumber) {
           button.style.display = 'block';
-        } else {
-          button.style.display = 'none';
+        } else {       
           iziToast.show({
             class: 'toast',
             position: 'topRight',
@@ -76,6 +76,9 @@ function getGalleryItems() {
       iziToast.show({
         class: 'toast',
         position: 'topRight',
+        icon: 'icon',
+        iconUrl: err,
+        iconColor: 'white',
         messageColor: 'white',
         title: 'Error',
         titleColor: 'white',
@@ -83,6 +86,7 @@ function getGalleryItems() {
       });
       if (error.response) {
         console.error('Server error:', error.response.status);
+        loader.style.display = 'none';
       } else if (error.request) {
         console.error('No response from server');
       } else {
@@ -91,11 +95,11 @@ function getGalleryItems() {
     })
     .finally(() => {
       const cardSizes = list.lastChild.getBoundingClientRect();
-      scrollBy({
-        top: cardSizes.top + cardSizes.height * 2,
+      window.scrollBy({
+        top: cardSizes.height * 2,
         behavior: 'smooth',
       });
-      
+      loader.style.display = 'none';
     });
   form.reset();
 }
